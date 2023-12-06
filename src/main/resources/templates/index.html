@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Shop</title>
+    <link rel="stylesheet" th:href="@{../assets/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-***********" crossorigin="anonymous" />
+</head>
+<body>
+<nav>
+    <div class="logo">
+        <img th:src="@{../assets/logo.png}" alt="Logo">
+    </div>
+    <div class="title">
+        <h1>Gestion de Livres</h1>
+    </div>
+    <div class="navbar">
+        <button onclick="openModal('createBookModal')">Créer un livre</button>
+<!--        <button onclick="toggleLoginModal()">Connexion/Déconnexion</button>-->
+        <div th:if="${#request.userPrincipal != null}">
+            <p><span th:text="${#request.userPrincipal.name}"></span></p>
+            <form action="#" th:action="@{/logout}" method="post">
+                <button type="submit">Déconnexion</button>
+            </form>
+        </div>
+
+        <div th:unless="${#request.userPrincipal != null}">
+            <a href="/login">Se connecter</a>
+        </div>
+    </div>
+    <!--<div class="login">
+        <button id="loginButton">Se connecter</button>
+    </div>-->
+
+</nav>
+
+<form action="#" th:action="@{/searchBook}" method="get">
+    <input type="text" name="search" placeholder="Rechercher un livre">
+    <button type="submit"><i class="fas fa-search"></i></button>
+</form>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Année de publication</th>
+        <th>Genres</th>
+    </tr>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.bookId}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.publicationDate}"></td>
+        <td th:text="${book.gender}"></td>
+    </tr>
+</table>
+
+<div id="createBookModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('createBookModal')">&times;</span>
+        <h2>Ajouter un livre</h2>
+        <form action="#" th:action="@{/addBook}" method="post" th:object="${bookDto}">
+            <input type="text" name="title" placeholder="Titre" th:field="*{title}" required>
+            <input type="text" name="author" th:field="*{author}" placeholder="Auteur" required>
+            <input type="number" name="publicationDate" th:field="*{publicationDate}" placeholder="Année de publication" required>
+            <select name="gender" required th:field="*{gender}">
+                <option value="" disabled selected> Selectionner un genre</option>
+                <option th:value="AUTOBIOGRAPHIE">AUTOBIOGRAPHIE</option>
+                <option th:value="CONTE">CONTE</option>
+                <option th:value="BIOGRAPHIE">BIOGRAPHIE</option>
+                <option th:value="NOUVELLE">NOUVELLE</option>
+                <option th:value="FABLE">FABLE</option>
+                <option th:value="ROMAN">ROMAN</option>
+            </select>
+            <button type="submit">Ajouter</button>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{../assets/script.js}"></script>
+<script>
+    // Récupérer les paramètres de recherche de l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+
+    // Pré-remplir le champ de recherche avec le paramètre de l'URL
+    document.getElementsByName('search')[0].value = searchQuery || '';
+</script>
+</body>
+</html>
