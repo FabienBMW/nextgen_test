@@ -15,10 +15,10 @@
         <h1>Gestion de Livres</h1>
     </div>
     <div class="navbar">
-        <button onclick="openModal('createBookModal')">Créer un livre</button>
 <!--        <button onclick="toggleLoginModal()">Connexion/Déconnexion</button>-->
         <div th:if="${#request.userPrincipal != null}">
             <p><span th:text="${#request.userPrincipal.name}"></span></p>
+            <button th:if="${#request.userPrincipal.name == 'admin'}" onclick="openModal('createBookModal')">Créer un livre</button>
             <form action="#" th:action="@{/logout}" method="post">
                 <button type="submit">Déconnexion</button>
             </form>

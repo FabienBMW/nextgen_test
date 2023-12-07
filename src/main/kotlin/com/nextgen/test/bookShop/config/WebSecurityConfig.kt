@@ -26,6 +26,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         httpSecurity.authorizeRequests()
             .antMatchers("/addBook").hasRole("ADMIN")
             .antMatchers("/searchBook").hasRole("USER")
+            .antMatchers("/").permitAll()
             .anyRequest().authenticated()
             .and().httpBasic()
             .and()
